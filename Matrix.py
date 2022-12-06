@@ -364,8 +364,10 @@ class Matrix(pd.DataFrame):
         while True:
             # Balancing factors (Nan ~> 0, inf ~> 1):
             A = (TO / fmat.TO).fillna(0).replace([np.inf, -np.inf], 1)
+            
+            fmat = fmat.mul(A, axis=1, level=0)
             B = (TD / fmat.TD).fillna(0).replace([np.inf, -np.inf], 1)
-            fmat = fmat.mul(A, axis=1, level=0).mul(B, axis=1, level=1)
+            fmat = fmat.mul(B, axis=1, level=1)
         
             i += 1
             within_tol = not (any((fmat.TO - TO) > tolerance) or any((fmat.TD - TD) > tolerance))
